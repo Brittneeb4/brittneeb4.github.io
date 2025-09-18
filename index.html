@@ -1,1 +1,20 @@
 <p>Hello World!</p>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js'
+
+  const supabase = createClient(
+    'https://gaxdmilpytksfzqjhdbt.supabase.co'
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdheGRtaWxweXRrc2Z6cWpoZGJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgxNjkzNjcsImV4cCI6MjA3Mzc0NTM2N30.E0C2In4pPV1hxydsf4tGVAPROErX3oCbbkZFUu_GBtw
+'
+  )
+
+  async function loadUsers() {
+    let { data, error } = await supabase.from('users').select('*')
+    if (error) console.error(error)
+    else console.log(data)
+  }
+
+  loadUsers()
+</script>
+
