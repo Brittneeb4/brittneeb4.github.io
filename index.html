@@ -37,8 +37,8 @@
 
       const grouped = {};
       data.forEach(r => {
-        if (!grouped[r.name]) grouped[r.name] = new Set();
-        grouped[r.name].add(toTitleCase(r.ingredient)); // Set removes duplicates
+        if (!grouped[toTitleCase(r.name)]) grouped[toTitleCase(r.name)] = new Set();
+        grouped[toTitleCase(r.name)].add(toTitleCase(r.ingredient)); // Set removes duplicates
       });
 
       // Render categories with recipe lists
