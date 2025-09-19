@@ -19,15 +19,28 @@
     async function loadRecipes() {
       const { data, error } = await supabase
         .from("recipes")
-        .select("name", { distinct: true });
+        .select("name, ingredient", { distinct: true })
+        .order("name", {ascending: true});
 
       if (error) {
         console.error("Error loading recipes:", error.message);
         return;
       }
 
-      document.getElementById("recipes").innerHTML =
-        data.map(r => `<li>${r.name}</li>`).join("");
+      const grouped = {};
+      data.forEach(r => {
+        if (!grouped[r.name]) grouped[r.name] = new Set();
+        grouped[r.name].add(r.ingredient); // Set removes duplicates
+      });
+
+      // Render categories with recipe lists
+      const container = document.getElementById("recipes");
+      container.innerHTML = Object.entries(grouped).map(([cat, names]) => `
+        <h2>${cat}</h2>
+        <ul>
+          ${[...names].map(n => `<li>${n}</li>`).join("")}
+        </ul>
+      `).join("");
     }
 
     loadRecipes();
