@@ -15,6 +15,12 @@
   <h1>Available Drinks</h1>
   <ul id="recipes"></ul>
 
+  <form id="orderForm">
+    <input name = "name" placeholder="Name" required>
+    <select name = "drink" placeholder="Drink" required>
+    <input name = "notes" placeholder="Notes">
+  </form>
+
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js";
 
@@ -31,34 +37,30 @@
         .join(" ");
     }
 
-    async function loadRecipes() {
-      const { data, error } = await supabase
+    async function loadOptions() {
+
+        const { data, error } = await supabase
         .from("recipes")
-        .select("name, ingredient", { distinct: true })
+        .select("name", { distinct: true })
         .order("name", {ascending: true});
 
-      if (error) {
-        console.error("Error loading recipes:", error.message);
+        if (error) {
+        console.error("Error loading drink options:", error.message);
         return;
-      }
+        }
 
-      const grouped = {};
-      data.forEach(r => {
-        if (!grouped[toTitleCase(r.name)]) grouped[toTitleCase(r.name)] = new Set();
-        grouped[toTitleCase(r.name)].add(toTitleCase(r.ingredient)); // Set removes duplicates
-      });
-
-      // Render categories with recipe lists
-      const container = document.getElementById("recipes");
-      container.innerHTML = Object.entries(grouped).map(([names, ing]) => `
-        <h2>${names}</h2>
-        <ul>
-          ${[...ing].map(n => `<li>${n}</li>`).join("")}
-        </ul>
-      `).join("");
+        const dropdown = document.getElementById("drink");
+        data.forEach(recipe => {
+            const option = document.createElement("option");
+            option.value = recipe.name;
+            option.textContent = toTitleCase(recipe.name);
+            dropdown.appendChild(option);
+        });
     }
 
-    loadRecipes();
+    loadOptions();
+
+    
   </script>
 </body>
 </html>
