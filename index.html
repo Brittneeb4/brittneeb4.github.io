@@ -19,7 +19,7 @@
     async function loadRecipes() {
       const { data, error } = await supabase
         .from("recipes")
-        .select("name", { distinct: true });
+        .select("name");
 
       if (error) {
         console.error("Error loading recipes:", error.message);
