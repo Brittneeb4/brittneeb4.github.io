@@ -6,7 +6,7 @@
 </head>
 <body>
   <h1>Drink Options</h1>
-  <ul id="users"></ul>
+  <ul id="recipes"></ul>
 
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js";
@@ -16,15 +16,21 @@
       "b_publishable_zbUK4BDTWFLKeIjRZgdOAA_8sYyZFOc"                // ← replace with anon key
     );
 
-    async function loadUsers() {
-      const { data, error } = await supabase.from("recipes").select("*");
+    async function loadRecipes() {
+      const { data, error } = await supabase
+        .from("recipes")
+        .select("name", { distinct: true });
+
       if (error) {
-        console.error(error);
+        console.error("Error loading recipes:", error.message);
         return;
       }
-      document.getElementById("recipes").innerHTML
+
+      document.getElementById("recipes").innerHTML =
+        data.map(r => `<li>${r.name}</li>`).join("");
     }
-    loadUsers();
+
+    loadRecipes();
   </script>
 </body>
 </html>
